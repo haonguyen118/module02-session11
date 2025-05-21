@@ -7,13 +7,11 @@ export default function ShopCart() {
     <div>
       <div className="container">
         <div className="page-header">
-          <h1 style={{ textAlign: "center", fontSize: 40 }}>Shopping Cart</h1>
+          <h1 style={{ textAlign: "left", fontSize: 30 }}>Shopping Cart</h1>
         </div>
-        <div className="row">
+        <div style={{ display: "flex", justifyContent: "between", gap: 20 }}>
           <ProductList></ProductList>
-          <div>
-            <Cart></Cart>
-          </div>
+          <Cart></Cart>
         </div>
       </div>
     </div>

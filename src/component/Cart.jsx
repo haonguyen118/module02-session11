@@ -1,95 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCart } from "../redux/action/cartAction";
 
-export default function Cart() {
+const Cart = () => {
+  const carts = useSelector((state) => state.listCart);
+  const dispatch = useDispatch();
+
+  const handleDeleteCart = (id) => {
+    dispatch(deleteCart(id));
+  };
+
   return (
-    <>
-      <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <div className="panel panel-danger">
-          <div className="panel-heading">
-            <h1 className="panel-title">Your Cart</h1>
-          </div>
-          <div className="panel-body">
-            <table className="table">
-              <thead>
+    <div className="max-w-2xl mt-6 border border-red-200 bg-red-50 rounded p-4">
+      <h2 className="text-red-800 font-semibold mb-4 text-lg bg-red-00">
+        Your Cart
+      </h2>
+
+      <table className="w-full text-sm text-left border-collapse">
+        <thead>
+          <tr className="bg-red-100">
+            <th className="border px-2 py-1 text-center">STT</th>
+            <th className="border px-2 py-1">Name</th>
+            <th className="border px-2 py-1 text-center">Price</th>
+            <th className="border px-2 py-1 text-center">Quantity</th>
+            <th className="border px-2 py-1 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {carts &&
+            carts.map((item, index) => {
+              return (
                 <tr>
-                  <th width="4%">STT</th>
-                  <th>Name</th>
-                  <th width="15%">Price</th>
-                  <th width="4%">Quantity</th>
-                  <th width="25%">Action</th>
-                </tr>
-              </thead>
-              <tbody id="my-cart-body">
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Cake</td>
-                  <td>10 USD</td>
-                  <td>
+                  <td className="border px-2 py-1 text-center">{index + 1}</td>
+                  <td className="border px-2 py-1">{item.product.name}</td>
+                  <td className="border px-2 py-1 text-center">
+                    {item.product.price} USD
+                  </td>
+                  <td className="border px-2 py-1 text-center">
                     <input
-                      name="cart-item-quantity-1"
                       type="number"
-                      defaultValue={15}
+                      value={item.quantity}
+                      className="w-16 border rounded text-center"
+                      readOnly
                     />
                   </td>
-                  <td>
-                    <a
-                      className="label label-info update-cart-item"
-                      data-product=""
+                  <td className="border px-2 py-1 text-center space-x-2">
+                    <button
+                      onClick={handleUpdate}
+                      className="bg-blue-400 text-white px-2 py-1 rounded text-xs"
                     >
                       Update
-                    </a>
-                    <a
-                      className="label label-danger delete-cart-item"
-                      data-product=""
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCart(item.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded text-xs"
                     >
                       Delete
-                    </a>
+                    </button>
                   </td>
                 </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Hamburger</td>
-                  <td>15 USD</td>
-                  <td>
-                    <input
-                      name="cart-item-quantity-1"
-                      type="number"
-                      defaultValue={32}
-                    />
-                  </td>
-                  <td>
-                    <a
-                      className="label label-info update-cart-item"
-                      data-product=""
-                    >
-                      Update
-                    </a>
-                    <a
-                      className="label label-danger delete-cart-item"
-                      data-product=""
-                    >
-                      Delete
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot id="my-cart-footer">
-                <tr>
-                  <td colSpan={4}>
-                    There are <b>2</b> items in your shopping cart.
-                  </td>
-                  <td colSpan={2} className="total-price text-left">
-                    630 USD
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-        <div className="alert alert-success" role="alert" id="mnotification">
-          Add to cart successfully
-        </div>
+              );
+            })}
+        </tbody>
+      </table>
+
+      <div className="mt-4 flex justify-between items-center text-sm">
+        <span className="text-gray-700">
+          There are <strong>2</strong> items in your shopping cart.
+        </span>
+        <span className="text-red-600 font-bold text-lg">
+          {carts.reduce(
+            (total, curr) => total + curr.product.price * curr.quantity,
+            0
+          )}{" "}
+          USD
+        </span>
       </div>
-    </>
+    </div>
   );
-}
+};
+
+export default Cart;
